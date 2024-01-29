@@ -1,0 +1,171 @@
+const jwt = require("jsonwebtoken")
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+
+//database
+dotenv.config({path:'./config.env'});
+require('./DB/conn');
+
+// const USER = require('./model/userSchema');
+app.use(express.json('./router/auth'));
+
+//  we link to router file
+app.use(require('./router/auth'));
+
+const PORT = process.env.PORT ;
+
+// middlewairr
+const middlewaire = (req,res,next)=>{
+    console.log('hellow my middlewaire')
+    next();
+}
+
+
+app.get('/',(req,res)=>{
+  res.send('hellow server')
+  });
+  app.get('/about',middlewaire,(req,res)=>{
+    res.cookie("jwtoken","token")
+    res.send('hellow server')
+    });
+    app.get('/contact',(req,res)=>{
+        res.send('hellow server')
+        });
+        app.get('/register',(req,res)=>{
+            res.send('hellow server')
+            });
+            app.get('/singin',(req,res)=>{
+                res.send('hellow server')
+                });
+
+  app.listen(PORT,()=>{
+    console.log('my server ${PORT}');
+  })
+
+
+
+  // new app.js
+
+  const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+
+dotenv.config({ path:'./config.env'})
+
+const DB = process.env.DATABASE;
+
+mongoose.connect(DB).then(() => {
+    console.log("connect successfull mongose");
+}).catch((err)=> console.log('no connect mongose'));
+//{
+//  useNewUrlParser:true,
+//  useCreateIndex:true,
+//  useUnifiedTopology:true,
+//  useFindAndModify:false
+//}
+
+
+//middlewair
+const middleware = (req,res,next)=>{
+     console.log("its my middlewairr");
+     next();
+}
+
+
+//marn utube  batabase marnstake users  , 
+
+app.get('/',(req,res)=>{
+  res.send('hellow Home world for the server');
+  });
+
+  app.get('/',(req,res)=>{
+    res.send('hellow  world for the server');
+    });
+
+    app.get('/about',middleware,(req,res)=>{
+      console.log("Hellow my about middlewairr");
+      res.send('hellow about world for the server');
+      });
+
+      app.get('/register',(req,res)=>{
+        res.send('hellow register  world for the server');
+        });
+         
+        app.get('/singin',(req,res)=>{
+          res.send('hellow singin world for the server');
+          });
+        
+      
+    
+  
+
+
+
+  app.listen(3000,()=>{
+    console.log('my server is runing at port succefull');
+  })
+
+  .....log in.....
+   //login root
+
+    router.post('/singin', async (req,res)=>{
+          
+        try{
+              let token ;
+               const { email , password } = req.body;
+              if(!email || !password){
+                    return res.status(400).json({error:"plesss fill tha data"})
+                 }
+            
+        const userLogin = await User.findOne({email:email});
+                 
+        if(userLogin){
+            const isMatch = await bcrypt.compare(password, userLogin.password) ;  
+             const token = await userLogin.generateAuthToken();
+               res.cookie("jwtoken",token,{
+                expires:new Date(Date.now()+ 25892000000),
+                httpOnly:true
+               })
+                 if(!isMatch){
+                   res.status(400).json({error:" invillet user err"});
+                 }else{
+                   res.json({massage:"user massage successfully"});
+                }
+                }else{
+                    res.status(400).json({error:" invillet user err"});
+
+                   }
+
+
+        } catch(err){
+            console.log(err)
+        }
+        })
+
+
+.....schimma ...
+
+// we arr hassing password
+
+useSchema.pre( 'save' , async function (next){
+     if(this.isModified('password')){
+        this.password = await bcrypt.hash(this.password,12);
+        this.cpassword = await bcrypt.hash(this.cpassword,12);
+
+     }
+     next();
+})
+// we are generate token
+ useSchema.methods.generateAuthToken = async function(){
+    try{
+          let token = jwt.sing({_id:this._id},process.env.SECRET_KEY);
+          this.tokens= this.tokens.concat({token:token});
+          await this.save();
+          return token ;
+    }catch(err){
+        console.log(err)
+    }
+ }
