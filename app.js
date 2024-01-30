@@ -102,7 +102,8 @@ app.delete("/Productdelete/:id", async (req, res) => {
 });
 
 require("./database/conn");
-const User = require("../server/model/userSchema");
+const User = require("./model/userSchema");
+
 
 mongoose.connect(process.env.DATABAS || `mongodb+srv://kmsolyman:solyman@cluster0.7wpalig.mongodb.net/token?retryWrites=true&w=majority`);
 
