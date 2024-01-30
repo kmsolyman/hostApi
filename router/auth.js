@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+
 const Authentication =  require("../medlleware/authenticate");
 const dotenv = require('dotenv');
 
@@ -67,7 +67,7 @@ else{
         if(!loginUser){
             return res.status(400).send({error:"not found"});
         }
-        const isMatch = await bcrypt.compare(password,loginUser.password);    
+        const isMatch = await (password,loginUser.password);    
         if(isMatch){
             const token=await loginUser.generateToken();
             res.cookie("jwtoken",token,{
