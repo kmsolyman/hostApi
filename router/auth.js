@@ -16,7 +16,7 @@ dotenv.config({ path:'./config.env'});
 const User = require("../model/userSchema");
  
 router.get('/', (req,res)=>{
-    res.send('hellow  auth server router.js ')
+    res.send('Hellow this Server is Runing  at.. ')
     });
 
 // Register  >>
