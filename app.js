@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
 require("./database/conn");
@@ -13,13 +12,20 @@ dotenv.config({ path:'./config.env'});
 
 const PORT = process.env.PORT || 5000;
 
-
-
-
-
 app.use(cors());
 app.use(express.json());
 // db connection
+
+const Product = require("./model/adminSchima");
+
+// import model image
+
+app.use(cookieParser())
+
+app.use(require('./router/auth')); 
+// app.use(require('./Adminroute/adminAuth'));
+app.use(bodyParser.json({extended: true }));
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 
 mongoose
@@ -30,20 +36,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
-//user schema
-
-require("./database/conn");
-const Product = require("./model/adminSchima");
-// import model image
-
-app.use(cookieParser())
-
-app.use(require('./router/auth')); 
-// app.use(require('./Adminroute/adminAuth'));
-app.use(bodyParser.json({extended: true }));
-app.use(bodyParser.urlencoded({ extended: true })); 
-
 
 
 
@@ -112,19 +104,7 @@ app.delete("/Productdelete/:id", async (req, res) => {
 require("./database/conn");
 const User = require("../server/model/userSchema");
 
-
-// link auth.js file ->>>
-
-app.use(express.json());
-app.use(cookieParser())
-app.use(require('./router/auth')); 
-app.use(bodyParser.json({extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(cors());
-
-
-mongoose.connect(process.env.MONGODB_URI || `mongodb+srv://kmsolyman:solyman@cluster0.7wpalig.mongodb.net/token?retryWrites=true&w=majority`);
+mongoose.connect(process.env.DATABAS || `mongodb+srv://kmsolyman:solyman@cluster0.7wpalig.mongodb.net/token?retryWrites=true&w=majority`);
 
 
 app.listen(PORT,()=>{
