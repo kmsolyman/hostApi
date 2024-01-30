@@ -1,16 +1,20 @@
+require("dotenv").config();
 const express = require("express");
-const { default: mongoose } = require("mongoose");
 const app = express();
+require("./database/conn");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const { default: mongoose } = require("mongoose");
+
+
+dotenv.config({ path:'./config.env'});
 
 const PORT = process.env.PORT || 5000;
 
 
 
-dotenv.config({ path:'./config.env'});
 
 
 app.use(cors());
@@ -105,45 +109,25 @@ app.delete("/Productdelete/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`server ise running on ...${PORT}`);
-});
+require("./database/conn");
+const User = require("../server/model/userSchema");
 
 
+// link auth.js file ->>>
 
-// const dotenv = require('dotenv');
-// const { default: mongoose } = require("mongoose");
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// const app = express();
-// const cookieParser = require('cookie-parser');
-// const cors = require('cors')
+app.use(express.json());
+app.use(cookieParser())
+app.use(require('./router/auth')); 
+app.use(bodyParser.json({extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// dotenv.config({ path:'./config.env'});
+app.use(cors());
 
 
-
-// require("./database/conn");
-// const User = require("../server/model/userSchema");
+mongoose.connect(process.env.MONGODB_URI || `mongodb+srv://kmsolyman:solyman@cluster0.7wpalig.mongodb.net/token?retryWrites=true&w=majority`);
 
 
-// // link auth.js file ->>>
-
-// app.use(express.json());
-// app.use(cookieParser())
-// app.use(require('./router/auth')); 
-// app.use(bodyParser.json({extended: true }));
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// app.use(cors());
-
-
-// mongoose.connect(process.env.MONGODB_URI || `mongodb+srv://kmsolyman:solyman@cluster0.7wpalig.mongodb.net/token?retryWrites=true&w=majority`);
-
-
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT,()=>{
-// console.log('my server is runing at port succefull ${port}')})
+app.listen(PORT,()=>{
+console.log('my server is runing at port succefull ${port}')})
 
 
